@@ -1,0 +1,12 @@
+.idea
+.mypy_cache
+.vscode
+__pycache__
+*\__pycache__
+inspectionProfiles
+*.xml
+*.iml
+.gitattributes
+*.nrrd
+*.pgm
+*.dcm
