@@ -3,6 +3,7 @@ Find all images with string "t2" inside their names, do deep into each folder, a
 save all the path of each image into an Excel
 """
 import re
+import os
 import natsort
 import random
 from pathlib import Path
@@ -25,6 +26,7 @@ def copyT2andRecordInExcel(t2List: list[Path], destinationPath: STR_OR_PATH, exc
     """
     if isinstance(destinationPath, str):
         destinationPath = Path(destinationPath)
+        os.makedirs(destinationPath, exist_ok=True)
     excelPath = destinationPath.joinpath(excelName)
     if not overwriteFlag:
         # if not verify the existing file, check if the file excelPath exists, if exists return with printing message
@@ -43,15 +45,13 @@ def copyT2andRecordInExcel(t2List: list[Path], destinationPath: STR_OR_PATH, exc
             # size less than 1MB is too small
             # "Registered" seems duplicated
             pathId = re.findall(r'(RD_.+?)\\', str(f))[0]
-            destinationFilePath = destinationPath.joinpath(f"{f.stem}_{pathId}{f.suffix}")  # rename
+            hospitalName = re.findall(r'[\u4e00-\u9fff]+', str(f))[0]  # find chinese characters
+            # rename
+            destinationFilePath = destinationPath.joinpath(f"{f.stem}_{hospitalName}_{f.stat().st_size}size{f.suffix}")
             if destinationFilePath.exists():
-                if destinationFilePath.stat().st_size == f.stat().st_size:
-                    print(f"Same file {f}, skipped")
-                    continue
-                else:
-                    destinationFilePath = destinationPath.joinpath(
-                        f"{f.stem}_{pathId}_{f.stat().st_size}size{f.suffix}")
-            print(f"Copying {destinationFilePath.name} from {f.parent} to {destinationPath}")
+                print(f"Same file {f}, skipped")
+                continue
+            print(f"Copying {destinationFilePath.name} to {destinationPath} from {f.parent} ")
             shutil.copy2(f, destinationFilePath)
             fileIdSeries.append(destinationFilePath.name)
             pathSeries.append(str(f))
@@ -68,9 +68,9 @@ def copyT2andRecordInExcel(t2List: list[Path], destinationPath: STR_OR_PATH, exc
         sFileNamePattern = pd.Series(fileNamePatterns, dtype="string")
         sFileSize = pd.Series(fileSizeSeries, dtype=int)
 
-        df1 = pd.DataFrame({"File Name": sFileId,
-                            "Id": sId,
-                            "File Size(KB)": sFileSize,
+        df1 = pd.DataFrame({"File Name"         : sFileId,
+                            "Id"                : sId,
+                            "File Size(KB)"     : sFileSize,
                             "File Original Path": sPath})
         print(df1.head())
         df1.to_excel(writer, sheet_name="Summary of Images")
@@ -95,7 +95,7 @@ def splitData(savePath: STR_OR_PATH):
     randomFileList = random.sample(savePathMg.files, savePathMg.nFile)
 
     # split randomFileList into 10 parts
-    n = 14
+    n = 13
     splitList = [randomFileList[i::n] for i in range(n)]
     idx = 1
     for i, split in enumerate(splitList):
@@ -109,7 +109,7 @@ def splitData(savePath: STR_OR_PATH):
 
 
 sourcePath = "E:/1. UGU Clinical Trial Data"
-savePath = "D:/GitRepos/train_nnUNet/clinical_collect_data"
+savePath = "D:/GitRepos/train_nnUNet/clinical_collect_data_new"
 excelFileName = "0Summary.xlsx"
 
 # findAllT2(sourcePath, savePath, excelFileName)

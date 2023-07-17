@@ -87,38 +87,38 @@ Research Algorithm (After Oct 2022)
 
 # Addon Algorithm
 
-## 1. B Mode Image Generation
+## f1. B Mode Image Generation
 
 - algorithm file: `f1_bModeGeneration.py`
 - save the b-mode of pgm files in list of folders
 - add test function `test_f1_b_mode_parameter.py`
 - required python packages: `pip install pathlib pyside6`
 
-## 2. Calibration Board Band Noise Detection Function
+## f2. Calibration Board Band Noise Detection Function
 
 - algorithm file: `f2_calibrationBBN.py`
 - save stft figures
 - add test stft function `test_f2_scipy_stft.py`: scipy.signal.stft use periodic hanning window if compared with matlab
 
-## 3. Medical Image Reader
+## f3. Medical Image Reader
 
 - support  `.nrrd` and `.dcm` file
 - file content can be seen in debug mode
 - required python packages `pip install pydicom pynrrd`
 
-## 4. Transform Matrix Computing
+## f4. Transform Matrix Computing
 
 - Reference: [Lark Doc - 2D US-US Image Registration Experiment](https://ultrastmedtech.feishu.cn/wiki/wikcnfzQmLFeaI2ay1IB1dB5nyf)
 - Compute the ground truth (the transform matrix between two recorded DICOM images) of the ShangTao's 2D medical images registration algorithm
 - required python packages: `pip install numpy pathlib pydicom`
 
-## 5. Convert to Nifti Image
+## f5. Convert to Nifti Image
 
 - Reference: [Lark Doc - TotalSegmentator Prostate MRI Training](https://ultrastmedtech.feishu.cn/wiki/wikcn7izmVPGDmIbFtFzd5JHtke#JUE8d42ucoWywSxkjUXcdel0nZd)
 - reading all the medical images (*.nrrd, *.mha) in the designated folder, and convert them into nifti images
 - required python packages: `pip install SimpleITK`
 
-## 6. Find T2 Images from Clinical Data
+## f6. Find T2 Images from Clinical Data
 
 - Reference: [Lark Doc - Prostate Segmentation - nnUNet](https://ultrastmedtech.feishu.cn/wiki/wikcnGFSjQCGfz45Iq2ls7dNaAd?from=from_lark_index_search)
 - Find all images with string "t2" inside their names.
